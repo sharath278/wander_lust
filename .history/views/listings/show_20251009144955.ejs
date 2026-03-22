@@ -1,0 +1,83 @@
+<%- include("/includes/header.ejs") %>
+
+<div class="container mt-5">
+  <!-- Listing Card -->
+  <div class="card mb-4 shadow-lg">
+    <img src="<%= listing.image.url %>" class="card-img-top" alt="<%= listing.title %>">
+    <div class="card-body">
+      <h2 class="card-title"><%= listing.title %></h2>
+      <p class="card-text"><%= listing.description %></p>
+      <p class="card-text"><strong>Location:</strong> <%= listing.location %>, <%= listing.country %></p>
+      <p class="card-text"><strong>Price:</strong> $<%= listing.price %></p>
+      <p class="card-text"><strong>Owner:</strong> <%= listing.owner ? listing.owner.username : "Unknown" %></p>
+      
+      <% if(currUser && listing.owner && listing.owner._id.toString() === currUser._id.toString()){ %>
+        <a href="/listings/<%= listing._id %>/edit" class="btn btn-warning">Edit Listing</a>
+      <% } %>
+    </div>
+  </div>
+
+  <!-- Reviews Section -->
+  <h3 class="mt-5 mb-3">Reviews</h3>
+  <div class="row">
+    <% if(listing.reviews.length === 0){ %>
+      <p class="text-muted">No reviews yet. Be the first to review!</p>
+    <% } %>
+
+    <% for(let review of listing.reviews){ %>
+      <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card shadow-sm h-100">
+          <div class="card-body">
+            <h5 class="card-title">
+              <%= review.author ? review.author.username : "Unknown" %>
+            </h5>
+            Rating: 
+            <span class="text-warning">
+              <%= "⭐".repeat(review.rating) %>
+            </span>
+            <p class="card-text"><%= review.comment %></p>
+          </div>
+          <div class="card-footer text-muted d-flex justify-content-between align-items-center">
+            <span>Posted on <%= review.createdAt.toDateString() %></span>
+
+            <% if(currUser && review.author && review.author._id.toString() === currUser._id.toString()){ %>
+              <form method="POST" action="/reviews/<%= review._id %>?_method=DELETE">
+                <button class="btn btn-sm btn-danger" type="submit">Delete</button>
+              </form>
+            <% } %>
+          </div>
+        </div>
+      </div>
+    <% } %>
+  </div>
+
+  <!-- Add Review Form -->
+  <% if(currUser){ %>
+    <div class="mt-5">
+      <h4>Add a Review</h4>
+      <form action="/reviews/<%= listing._id %>" method="POST">
+        <div class="mb-3">
+          <label for="rating" class="form-label">Rating</label>
+          <select name="rating" id="rating" class="form-select" required>
+            <option value="" disabled selected>Select rating</option>
+            <option value="1">1 ⭐</option>
+            <option value="2">2 ⭐⭐</option>
+            <option value="3">3 ⭐⭐⭐</option>
+            <option value="4">4 ⭐⭐⭐⭐</option>
+            <option value="5">5 ⭐⭐⭐⭐⭐</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="comment" class="form-label">Comment</label>
+          <textarea name="comment" id="comment" class="form-control" rows="3" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit Review</button>
+      </form>
+    </div>
+  <% } else { %>
+    <p class="mt-5">Please <a href="/login">login</a> to add a review.</p>
+  <% } %>
+
+</div>
+
+<%- include("/includes/footer.ejs") %>

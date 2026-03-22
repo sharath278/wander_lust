@@ -1,0 +1,102 @@
+body{
+   display: flex;
+   flex-direction: column;
+   min-height: 100vh;
+}
+.container{
+    flex: 1;
+}
+
+.navbar{
+    height : 5rem;
+    background-color: white;
+}
+
+/* logo */
+.fa-regular {
+    font-size: 2rem;
+    color: #fe424d;
+}
+
+.nav-link{
+    color: #222222 !important;
+}
+
+/* Footer */
+
+.f-info-links a{
+    text-decoration: none;
+    color:#222222;
+     margin-right:1rem;
+}
+
+.f-info-links a:hover{
+    text-decoration: underline;
+   
+}
+.f-info-links, .f-info-socials, .f-info-brand {
+    width:100%;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+
+.f-info-socials i{
+    margin-right:1rem;
+    font-size: 1.2rem;
+    
+}
+
+.f-info{
+    text-align: center;
+    height : 8rem;
+    background-color: #ebebeb;
+    display:flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: space-evenly;
+}
+
+
+
+.card{
+ border:none !important;
+ margin-left: 2rem;
+    
+}
+
+.card-img-top{
+    border-radius: 1rem !important;
+    width : 100% !important;
+    object-fit: cover !important;
+
+}
+
+
+
+.listing-img {
+    height: 18rem;
+    object-fit: cover;   /* prevents distortion */
+    transition: opacity 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease; /* smooth hover */
+}
+
+/* Hover effect */
+.card:hover .listing-img {
+    opacity: 0.9;
+    transform: scale(1.02); /* small zoom effect */
+}
+
+.card:hover {
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1); /* Soft shadow on hover */
+    transition: box-shadow 0.3s ease;
+}
+
+/* Enhancing forms look */
+form.needs-validation {
+    background: #fdfdfd;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}

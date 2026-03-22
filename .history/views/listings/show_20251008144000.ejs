@@ -1,0 +1,25 @@
+<% for(let review of listing.reviews) { %>
+  <div class="col-md-6 col-lg-4 mb-4">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <h5 class="card-title">
+          <%= review.author ? review.author.username : "Unknown" %>
+        </h5>
+        Rating:
+        <span class="text-warning">
+          <%= "⭐".repeat(review.rating) %>
+        </span>
+        <p class="card-text"><%= review.comment %></p>
+      </div>
+      <div class="card-footer text-muted d-flex justify-content-between align-items-center">
+        <span>Posted on <%= review.createdAt.toDateString() %></span>
+
+        <% if(currUser && review.author && review.author._id.equals(currUser._id)) { %>
+          <form method="POST" action="/reviews/<%= review._id %>?_method=DELETE">
+            <button class="btn btn-sm btn-danger" type="submit">Delete</button>
+          </form>
+        <% } %>
+      </div>
+    </div>
+  </div>
+<% } %>
