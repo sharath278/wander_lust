@@ -5,6 +5,7 @@ const path = require("path");
 const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
 const session = require("express-session");
+const MongoStore = require("connect-mongo");
 const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
@@ -31,15 +32,34 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
 
+// Session store configuration
+const store = MongoStore.create({
+  mongoUrl: MONGO_URL,
+  crypto: {
+    secret: process.env.SECRET || "mysupersecretcode",
+  },
+  touchAfter: 24 * 3600,
+});
+
+store.on("error", (err) => {
+  console.log("ERROR in MONGO SESSION STORE", err);
+});
+
 // Session config
+app.set("trust proxy", 1); // Trust Render proxy
 app.use(session({
-  secret: "mysupersecretcode",
+  store,
+  secret: process.env.SECRET || "mysupersecretcode",
   resave: false,
   saveUninitialized: false,
   cookie: {
     maxAge: 7 * 24 * 60 * 60 * 1000,
     httpOnly: true,
-    secure: false
+    // Render proxy handles https, so secure cookie is set ideally over HTTPS
+    // Only set secure=true if you have https, or skip checking NODE_ENV if it's strictly Render HTTPS.
+    // Leaving it as `true` might break local dev if process.env.NODE_ENV is set to "production" locally without HTTPS
+    // Commonly checked with process.env.NODE_ENV:
+    secure: process.env.NODE_ENV === "production" ? true : false
   }
 }));
 

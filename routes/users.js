@@ -21,7 +21,10 @@ router.post("/signup", async (req, res, next) => {
 
       const redirectUrl = req.session.returnTo || "/listings";
       delete req.session.returnTo;
-      res.redirect(redirectUrl);
+      req.session.save((err) => {
+        if (err) return next(err);
+        res.redirect(redirectUrl);
+      });
     });
   } catch (e) {
     req.flash("error", e.message);
@@ -41,11 +44,14 @@ router.post(
     failureRedirect: "/login",
     failureFlash: true
   }),
-  (req, res) => {
+  (req, res, next) => {
     req.flash("success", "Welcome back!");
     const redirectUrl = req.session.returnTo || "/listings";
     delete req.session.returnTo;
-    res.redirect(redirectUrl);
+    req.session.save((err) => {
+      if (err) return next(err);
+      res.redirect(redirectUrl);
+    });
   }
 );
 
